@@ -1,0 +1,19 @@
+{
+  "name": "mongodb_compass",
+  "version": "1.0.0",
+  "description": "compass",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "mayursiinh",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.8.1",
+    "koa-bodyparser": "^4.2.1",
+    "koa-cors": "0.0.16",
+    "koa-router": "^7.4.0",
+    "mongodb": "^3.3.2"
+  },
+  "proxy": "http://localhost:8080"
+}

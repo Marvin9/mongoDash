@@ -1,0 +1,25 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "dependencies": {
+    "css-loader": "*",
+    "react": "*",
+    "react-dom": "*",
+    "react-router-dom": "^5.0.1",
+    "style-loader": "*"
+  },
+  "devDependencies": {
+    "babel-core": "*",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "*",
+    "babel-preset-react": "*",
+    "html-webpack-plugin": "*",
+    "webpack": "*",
+    "webpack-cli": "*",
+    "webpack-dev-server": "*"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --mode development --open --hot",
+    "build": "webpack --mode production"
+  }
+}
