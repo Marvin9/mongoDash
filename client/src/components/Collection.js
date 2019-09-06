@@ -8,6 +8,7 @@ class Collection extends Component {
             tuples : null
         }
         this.deleteTuple = this.deleteTuple.bind(this)
+        this.createTuple = this.createTuple.bind(this)
     }
 
     componentDidMount() {
@@ -37,10 +38,50 @@ class Collection extends Component {
         })
     }
 
+    createTuple() {
+        let tuples = document.querySelector('textarea[name="tupleName"]').value 
+        tuples = tuples.split('\n').map(obj => {
+            return JSON.parse(obj)
+        })
+        fetch('http://localhost:3000/insert', {
+            method : 'POST',
+            headers : {
+                'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify({dbName : this.props.db, collection : this.props.collection, object : {tuples : [...tuples]}})
+        })
+        .then(res => res.json())
+        .then(data => data.tuple.ops)
+        .then(data => {
+            let tuples = [...this.state.tuples]
+            data.map(tuple => {
+                tuples.push(tuple)
+            })
+            return tuples 
+        })
+        .then(tuples => this.setState({tuples : [...tuples]}))
+    }
+
     render() {
         if(this.state.tuples)
         return (
             <div id="tuples">
+                <div className="columns">
+                    <div className="column is-5">
+                        <div className="field">
+                            <div className="control">
+                                <textarea  className="textarea" placeholder='{ "key" : "value", "key2" : "value2" }&#10;{"key" : "value2"}' name="tupleName"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="column is-1">
+                    <div className="field">
+                            <div className="control">
+                                <button className="button is-success" onClick={this.createTuple}>Create Collection</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 {this.state.tuples.map((obj, ind) => {
                     return (
                         <div className="notification" key={ind}>

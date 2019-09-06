@@ -50,9 +50,9 @@ async function createCollection(db, collection) {
 
 async function insert(db, collection, obj) {
     return new Promise(resolve => {
-        db.collection(collection).insertOne(obj, err => {
+        db.collection(collection).insertMany(obj, (err, inserted) => {
             if(err) resolve({error : true, err})
-            resolve({success : true})
+            resolve({success : true, tuple : inserted})
         })
     })
 }

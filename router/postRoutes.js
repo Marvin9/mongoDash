@@ -20,11 +20,11 @@ routers.post('/collection', async ctx => {
 })
 
 routers.post('/insert', async ctx => {
-    let { dbName, collection, object } = ctx.request.body 
-    let JSONObj = JSON.parse(object) 
+    let { dbName, collection, object } = ctx.request.body
+    let arrayOfTuples = object.tuples
     let client = await db.getDB()
     let _db = client.db(dbName)
-    ctx.body = await insertDB(_db, collection, JSONObj)
+    ctx.body = await insertDB(_db, collection, arrayOfTuples)
 })
 
 module.exports = routers

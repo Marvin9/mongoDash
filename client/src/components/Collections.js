@@ -10,6 +10,7 @@ class Collections extends Component {
             collections : null
         }
         this.deleteCollection = this.deleteCollection.bind(this)
+        this.createCollection = this.createCollection.bind(this)
     }
 
     componentDidMount() {
@@ -37,11 +38,47 @@ class Collections extends Component {
             if(data) this.setState({collections : [...data]})
         })
     }
+
+    createCollection() {
+        let collection = document.querySelector('input[name="collectionName"]').value
+        let db = this.props.db 
+        fetch('http://localhost:3000/collection', {
+            method : "POST",
+            headers : {
+                'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify({dbName : db, collection})
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                this.setState({
+                    collections : [...this.state.collections, collection]
+                })
+            }
+        })
+    }
     
     render() {
         if(this.state.collections)
         return (
             <div id="collectionList">
+                <div className="columns">
+                    <div className="column is-2">
+                        <div className="field">
+                            <div className="control">
+                                <input type="text" className="input" placeholder="Collection name" name="collectionName"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="column is-1">
+                    <div className="field">
+                            <div className="control">
+                                <button className="button is-success" onClick={this.createCollection}>Create Collection</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <table className="table is-hoverable">
                     <thead>
                         <tr>

@@ -11,6 +11,7 @@ class Databases extends Component {
             list : null
         }
         this.delete = this.delete.bind(this)
+        this.createDatabase = this.createDatabase.bind(this)
     }
 
     componentDidMount() {
@@ -42,10 +43,33 @@ class Databases extends Component {
         })
     }
 
+    createDatabase() {
+        let databaseName = document.querySelector('input[name="databaseName"]').value
+        let object = { name : databaseName, sizeOnDisk : 0} 
+        let list = [...this.state.list, object]
+        this.setState({list : [...list]})
+    }
+
     render() {
         if(this.state.list)
         return (
             <div id="databaseList">
+                <div className="columns">
+                    <div className="column is-2">
+                        <div className="field">
+                            <div className="control">
+                                <input type="text" className="input" placeholder="Database name" name="databaseName"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="column is-1">
+                    <div className="field">
+                            <div className="control">
+                                <button className="button is-success" onClick={this.createDatabase}>Create Database</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <table className="table is-fullwidth is-hoverable">
                     <thead>
                         <tr>
