@@ -7,6 +7,8 @@ const delDb = require('../util/utility').dropDatabase
 const delCol = require('../util/utility').dropCollection
 const deleteKey = require('../util/utility').deleteKey
 
+const mongo = require('mongodb')
+
 routers.del('/database', async ctx => {
     let {dbName} = ctx.request.body
     let client = await db.getDB()
@@ -22,8 +24,9 @@ routers.del('/collection', async ctx => {
 })
 
 routers.del('/delete', async ctx => {
-    let {dbName, collection, key} = ctx.request.body 
-    key = JSON.parse(key)
+    let {dbName, collection, unique} = ctx.request.body
+    let key = unique
+    key['_id'] = new mongo.ObjectID(key['_id'])
     let client = await db.getDB()
     let _db = client.db(dbName) 
     ctx.body = await deleteKey(_db, collection, key)

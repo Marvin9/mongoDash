@@ -5,24 +5,27 @@ import Collections from './Collections'
 import Collection from './Collection'
 
 class Dashboard extends Component {
+    constructor() {
+        super()
+    }
     render() {
         return (
-            <Router>
-                <div id="dashboard">
-                    <br />
-                    <Route path="/" exact component={Databases} />
-                    <Route path="/:db/collection" exact component={({match}) => {
-                        return(
-                            <Collections db={match.params.db}/>
-                        )
-                        }} />
-                    <Route path="/collection/:db/:collection" exact component={({match}) => {
-                        return(
-                            <Collection db={match.params.db} collection={match.params.collection}/>
-                        )
-                        }}/>
-                </div>
-            </Router>
+                    <Router>
+                        <div id="dashboard">
+                            <br />
+                            <Route path="/" exact component={Databases} />
+                            <Route path="/:db/collection" exact component={({match}) => {
+                                return(
+                                    <Collections db={match.params.db}/>
+                                )
+                                }} />
+                            <Route path="/collection/:db/:collection" exact component={({match}) => {
+                                return(
+                                    <Collection db={match.params.db} collection={match.params.collection}/>
+                                )
+                                }}/>
+                        </div>
+                    </Router>
         )
     }
 }

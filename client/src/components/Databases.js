@@ -10,6 +10,7 @@ class Databases extends Component {
         this.state = {
             list : null
         }
+        this.delete = this.delete.bind(this)
     }
 
     componentDidMount() {
@@ -17,6 +18,28 @@ class Databases extends Component {
         .then(response => response.json())
         .then(data => this.setState({list : [...data]}))
         .catch(error => this.setState({error : true}))
+    }
+
+    delete(name) {
+        fetch('http://localhost:3000/database', {
+            method : 'DELETE',
+            headers : {
+                'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify({dbName : name + ''})
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                let list = [...this.state.list]
+                return list.filter(db => db.name === (name+'') ? 0 : 1)
+            } else {
+                return 0
+            }
+        })
+        .then(data => {
+            if(data) this.setState({list : [...data]})
+        })
     }
 
     render() {
@@ -30,16 +53,19 @@ class Databases extends Component {
                             <th>Database Name</th>
                             <th>Size On Disk</th>
                             <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {this.state.list.map((object, ind) => {
                             return (
                                 <tr key={ind}>
-                                    <th>{ind+1}</th>
-                                    <td>{object.name}</td>
-                                    <td>{bytesToKB(object.sizeOnDisk)} KB</td>
-                                    <td><Link to={`/${object.name}/collection`}>Select</Link></td>
+                                    <th className="subtitle">{ind+1}</th>
+                                    <td className="subtitle">{object.name}</td>
+                                    <td className="subtitle">{bytesToKB(object.sizeOnDisk)} KB</td>
+                                    <td><Link to={`/${object.name}/collection`} className="button is-info">Select</Link></td>
+                                    {object.name === "admin" || object.name === "local" || object.name === "config" ? <td>Delete Process in Next Version</td> : 
+                                    <td><button className="button is-danger" onClick={() => this.delete(object.name)}>Delete</button></td>}
                                 </tr>
                             )
                         })}
