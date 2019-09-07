@@ -11,6 +11,7 @@ class Collections extends Component {
         }
         this.deleteCollection = this.deleteCollection.bind(this)
         this.createCollection = this.createCollection.bind(this)
+        this.renameCollection = this.renameCollection.bind(this)
     }
 
     componentDidMount() {
@@ -58,6 +59,28 @@ class Collections extends Component {
             }
         })
     }
+
+    renameCollection(collection) {
+        let db = this.props.db 
+        let newCol = document.querySelector('input[name="renameCollection"]').value
+        fetch('http://localhost:3000/collection', {
+            method : 'PUT',
+            headers : {
+                'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify({dbName : db, collection, newCol})
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                let collections = this.state.collections
+                collections = collections.map(coll => coll === collection ? newCol : coll)
+                this.setState({
+                    collections : [...collections]
+                })
+            }
+        })
+    }
     
     render() {
         if(this.state.collections)
@@ -84,8 +107,9 @@ class Collections extends Component {
                         <tr>
                             <th>Index</th>
                             <th>Collection Name</th>
-                            <th></th>
-                            <th></th>
+                            <th>Select</th>
+                            <th>Delete</th>
+                            <th>Rename</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -96,6 +120,16 @@ class Collections extends Component {
                                     <td className="subtitle">{col}</td>
                                     <td><Link className="button is-info" to={`/collection/${this.props.db}/${col}`}>Select</Link></td>
                                     <td><button className="button is-danger" onClick={() => this.deleteCollection(`${this.props.db}`,`${col}`)}>Delete</button></td>
+                                    <td>
+                                        <div className="columns">
+                                            <div className="column is-5">
+                                                <input className="input" type="text"name="renameCollection"/>
+                                            </div>
+                                            <div className="column is-2">
+                                                <button className="button" onClick={() => this.renameCollection(`${col}`)}>Rename</button>
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                             )
                         })}

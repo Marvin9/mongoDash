@@ -25,11 +25,10 @@ routers.del('/collection', async ctx => {
 
 routers.del('/delete', async ctx => {
     let {dbName, collection, unique} = ctx.request.body
-    let key = unique
-    key['_id'] = new mongo.ObjectID(key['_id'])
+    unique['_id'] = new mongo.ObjectID(unique['_id'])
     let client = await db.getDB()
     let _db = client.db(dbName) 
-    ctx.body = await deleteKey(_db, collection, key)
+    ctx.body = await deleteKey(_db, collection, unique)
 })
 
 module.exports = routers

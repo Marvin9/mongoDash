@@ -84,6 +84,26 @@ async function deleteKey(db, collection, key) {
     })
 }
 
+async function updateCollection(db, collection, newCollection) {
+    return new Promise(resolve => {
+        db.collection(collection).rename(newCollection, (err, newCol) => {
+            if(err) resolve({error : true, err})
+            resolve({success : true})
+        })
+    })
+}
+
+async function updateTuple(db, collection, uniqueId, newVal) {
+    return new Promise(resolve => {
+        db.collection(collection).updateOne(uniqueId, {$set : newVal}, (err, res) => {
+            if(err) resolve({error : true, err})
+            resolve({success : true, res})
+        })
+    })
+}
+const mongo = require('mongodb')
+
+
 module.exports = {
     getDatabaseList,
     getCollectionList,
@@ -93,5 +113,7 @@ module.exports = {
     insert,
     dropDatabase,
     dropCollection,
-    deleteKey
+    deleteKey,
+    updateCollection,
+    updateTuple
 }
