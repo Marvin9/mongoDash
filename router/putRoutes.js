@@ -5,6 +5,7 @@ const db = require('../config/db')
 
 const updateCollection = require('../util/utility').updateCollection
 const updateTuple = require('../util/utility').updateTuple
+const updateMultiple = require('../util/utility').updateMultipleTuples
 
 const mongo = require('mongodb')
 
@@ -21,6 +22,13 @@ router.put('/update', async ctx => {
     let client = await db.getDB()
     let _db = client.db(dbName)
     ctx.body = await updateTuple(_db, collection, uniqueId, newVal)
+})
+
+router.put('/updatemulti', async ctx => {
+    let {dbName, collection, key, newVal} = ctx.request.body 
+    let client = await db.getDB()
+    let _db = client.db(dbName)
+    ctx.body = await updateMultiple(_db, collection, key, newVal)
 })
 
 module.exports = router

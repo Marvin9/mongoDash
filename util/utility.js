@@ -101,8 +101,15 @@ async function updateTuple(db, collection, uniqueId, newVal) {
         })
     })
 }
-const mongo = require('mongodb')
 
+async function updateMultipleTuples(db, collection, old, _new) {
+    return new Promise(resolve => {
+        db.collection(collection).updateMany(old, {$set : _new}, (err, res) => {
+            if(err) resolve({error : true, err})
+            resolve({success : true, res})
+        })
+    })
+}
 
 module.exports = {
     getDatabaseList,
@@ -115,5 +122,6 @@ module.exports = {
     dropCollection,
     deleteKey,
     updateCollection,
-    updateTuple
+    updateTuple,
+    updateMultipleTuples
 }

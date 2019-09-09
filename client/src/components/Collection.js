@@ -10,6 +10,7 @@ class Collection extends Component {
         this.deleteTuple = this.deleteTuple.bind(this)
         this.createTuple = this.createTuple.bind(this)
         this.updateTuple = this.updateTuple.bind(this)
+        this.updateMultipleTuples = this.updateMultipleTuples.bind(this)
     }
 
     componentDidMount() {
@@ -97,6 +98,46 @@ class Collection extends Component {
         })
     }
 
+    updateMultipleTuples() {
+        let updateWhereSelector = document.querySelector('textarea[name="updateWhere"]')
+        let key = updateWhereSelector.value
+        key = JSON.parse(key)
+        let updateToSelector = document.querySelector('textarea[name="updateTo"]')
+        let newVal = updateToSelector.value
+        newVal = JSON.parse(newVal)
+        fetch('http://localhost:3000/updatemulti', {
+            method : "PUT",
+            headers : {
+                'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify({dbName : this.props.db, collection : this.props.collection, key, newVal})
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                let tuples = this.state.tuples
+                tuples = tuples.map(tuple => {
+                    let isTupleMatch = 1
+                    for(const keys in key) {
+                        if(!(tuple.hasOwnProperty(keys) && tuple[keys] === key[keys])) {
+                            isTupleMatch = 0
+                            break
+                        }
+                    }
+                    if(isTupleMatch) {
+                        for(const keys in newVal) {
+                            tuple[keys] = newVal[keys]
+                        }
+                    }
+                    return tuple
+                })
+                this.setState({ tuples : [...tuples]})
+                updateToSelector.value = ""
+                updateWhereSelector.value = ""
+            }
+        })
+    }
+
     render() {
         if(this.state.tuples)
         return (
@@ -110,9 +151,26 @@ class Collection extends Component {
                         </div>
                     </div>
                     <div className="column is-1">
-                    <div className="field">
+                        <div className="field">
                             <div className="control">
                                 <button className="button is-success" onClick={this.createTuple}>Insert</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="column is-5">
+                        <div className="field">
+                            <div className="control">
+                                <textarea className="textarea" name="updateWhere" rows="1" placeholder='{ "key" : "oldValue" }'></textarea>
+                            </div>
+                            <div className="control">
+                                <textarea className="textarea" name="updateTo" rows="1" placeholder='{ "key" : "newValue" }'></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="column is-1">
+                        <div className="field">
+                            <div className="control">
+                                <button className="button is-success" onClick={this.updateMultipleTuples}>Update</button>
                             </div>
                         </div>
                     </div>
