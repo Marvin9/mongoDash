@@ -4,7 +4,10 @@
   "description": "compass",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "server": "node index.js",
+    "client" : "cd client && npm start",
+    "start" : "concurrently \"npm run server\" \"npm run client\"",
+    "build" : "cd client && npm run build"
   },
   "author": "mayursiinh",
   "license": "MIT",
@@ -15,5 +18,8 @@
     "koa-router": "^7.4.0",
     "mongodb": "^3.3.2"
   },
-  "proxy": "http://localhost:8080"
+  "proxy": "http://localhost:8080",
+  "devDependencies": {
+    "concurrently": "^4.1.2"
+  }
 }
