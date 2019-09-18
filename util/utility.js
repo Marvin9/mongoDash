@@ -25,12 +25,11 @@ async function getCollection(db, collection) {
     })
 }
 
-const MongoClient = require('mongodb').MongoClient
-
-const url = "mongodb://localhost:27017"
 
 
 async function createDatabase(dbname) {
+    const MongoClient = require('mongodb').MongoClient
+    const url = "mongodb://localhost:27017"
     return new Promise((resolve) => {
         MongoClient.connect(url + '/' + dbname,{useNewUrlParser : true, useUnifiedTopology : true} ,(err) => {
             if(err) resolve({error : true, err})
